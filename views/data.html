@@ -1,0 +1,19 @@
+{{ $nomor := 0 }}
+{{ range .taks }}
+    <tr>
+        {{ $nomor = increment $nomor 1 }}
+        <td>{{ $nomor }}</td>
+        <td>{{ .TaksName }}</td>
+        <td>{{ .Assignor }}</td>
+        <td>{{ .Deadline }}</td>
+        <td> 
+            {{ if eq .Finish "1" }}
+                <button class="btn btn-success btn-sm">Done</button>
+            {{else}}
+                <button data-id="{{ .Id }}" class="btn btn-warning btn-sm edit-taks mr-1 mb-1">Edit</button>
+                <button data-id="{{ .Id }}" class="btn btn-info btn-sm done-taks mr-1 mb-1">Selesai</button>
+                <button data-id="{{ .Id }}" class="btn btn-danger btn-sm delete-taks">Delete</button>
+            {{end}}
+        </td>
+    </tr>
+{{ end }}

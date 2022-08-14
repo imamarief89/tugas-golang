@@ -1,0 +1,38 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{ .title }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="form-taks" action="/store" method="POST">
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="">Taks</label>
+                    <input type="text" name="taks_name" value="{{ .taks.TaksName }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="">Assignor</label>
+                    <input type="text" name="assignor" value="{{ .taks.Assignor }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="">Deadline</label>
+                    <input type="date" name="deadline"  value="{{ .taks.Deadline }}" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{ if .taks.Id }}
+                    <input type="hidden" name="id" value="{{ .taks.Id }}">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">UBAH DATA</button>
+                {{ else }}
+                    <input type="hidden" name="finish" value="0">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">SIMPAN DATA</button>
+                {{ end }}
+            </div>
+        </form>
+    </div>
+</div>

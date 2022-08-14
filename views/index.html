@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    
+        
+    <title>Tugas Golang Imam Arifin</title>
+</head>
+
+<body class="py-4">
+    <div class="container mt-4">
+        <h1>Taks App</h1>
+        <button type="button" class="btn btn-primary add-taks mt-4 mb-4">Tambah Taks</button>
+        <table class="table mt-4 table-taks">
+            <thead>
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Taks</th>
+                <th scope="col">Assignor</th>
+                <th scope="col">Deadline</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {{ .data }}
+            </tbody>
+          </table>
+
+    </div>
+    <div class="modal fade" id="modalTaks" tabindex="-1" role="dialog" aria-labelledby="modalTaksLabel" aria-hidden="true"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+
+        <script>
+            var site_url = "http://localhost:8080/";
+    
+            $(document).ready(function(){
+
+                $('.table-taks').DataTable();
+
+                $('.add-taks').click(function(){
+                    $.get(site_url + "get_form", function(html){
+                        $('#modalTaks').html(html).modal('show')
+                    });     
+                });          
+
+                $(document).on('click', '.edit-taks', function(){
+                    var id = $(this).attr('data-id');
+                    $.get(site_url + "get_form?id=" + id, function(html){
+                        $('#modalTaks').html(html).modal('show')
+                    });     
+                });
+
+                $(document).on('click', '.done-taks', function(){
+                    var id = $(this).attr('data-id');
+                    var confirmDone = confirm("apakah anda yakin taks selesai?");
+                    if (confirmDone == true) {
+                        $.post(site_url + "done", {id: id}, function(response){
+                            alert(response.message)
+                            $('tbody').html(response.data);
+                        }, 'JSON');
+                    }  
+                });
+
+                $(document).on('click', '.delete-taks', function(){
+                    var id = $(this).attr('data-id');
+                    var confirmDelete = confirm("apakah anda yakin ingin menghapus data?");
+                    if (confirmDelete == true) {
+                        $.post(site_url + "delete", {id: id}, function(response){
+                            alert(response.message)
+                            $('tbody').html(response.data);
+                        }, 'JSON');
+                    }
+                });
+                
+                $(document).on('submit', '#form-taks', function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        type: $(this).attr('method'),
+                        url: $(this).attr('action'),
+                        data: $(this).serialize(),
+                        dataType: "json",
+                        success: function(response){
+                            $('tbody').html(response.data)
+                            alert(response.message)
+                            $('#modalTaks').modal('hide')
+                        },
+                        error: function(response){
+                            console.log(response)
+                        }
+                    })
+                });
+
+                
+            });
+        </script>
+
+    
+</body>
+
+</html>
